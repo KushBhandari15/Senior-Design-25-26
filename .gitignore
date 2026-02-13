@@ -1,0 +1,20 @@
+# Python environment and IDE
+/.venv/
+/.idea/
+/__pycache__/
+
+# Data folders
+/data/
+/subset*/
+
+# Large Model Files (Very important for GitHub)
+*.pth
+
+# Large Data/Result Files
+prediction_result*
+*.csv
+*.zip
+
+# OS files
+Thumbs.db
+.DS_Store
