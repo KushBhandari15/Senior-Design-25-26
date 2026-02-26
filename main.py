@@ -42,7 +42,7 @@ class Lung_Cancer:
                         det_output = self.detection_model(patch_tensor)
                         _, predicted = torch.max(det_output, 1)
                         if predicted.item() == 1:
-                            print(f"Nodule detected at coordinates: Z{z}, Y{y}, X{x}")
+                            # print(f"Nodule detected at coordinates: Z{z}, Y{y}, X{x}")
 
                             seg_output = self.segmentation_model(patch_tensor)
                             seg_prob = torch.sigmoid(seg_output)

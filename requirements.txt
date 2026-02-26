@@ -1,0 +1,13 @@
+--extra-index-url https://download.pytorch.org/whl/cu130
+# Dependencies
+setuptools
+wheel
+torch
+torchvision
+torchaudio
+scikit-learn
+simpleitk~=2.5.3
+numpy~=2.4.2
+matplotlib~=3.10.8
+pandas~=3.0.0
+seaborn

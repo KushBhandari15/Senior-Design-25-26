@@ -4,6 +4,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 import numpy as np
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 class NoduleDataset(Dataset):
     def __init__(self, pos_dir, neg_dir):
@@ -50,6 +53,15 @@ class NoduleDetection(nn.Module):
         x = self.fc2(x)
         return x
 
+def plot_confusion_matrix(cm, class_names):
+    
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+    plt.ylabel('Actual')
+    plt.xlabel('Predicted')
+    plt.title('Lung Cancer Detection: Confusion Matrix')
+    plt.show()
+
 class Pipeline:
 
     def __init__(self):
@@ -89,6 +101,7 @@ class Pipeline:
 
         self.model.eval()
         val_loss = 0; correct = 0; total = 0
+        all_preds = []; all_labels = []
         with torch.no_grad():
             for images, labels in loader:
                 images, labels = images.to(self.device), labels.to(self.device)
@@ -96,12 +109,25 @@ class Pipeline:
                 loss = self.criterion(outputs, labels)
                 val_loss += loss.item()
                 _, predicted = torch.max(outputs.data, 1)
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
+                all_preds.extend(predicted.cpu().numpy())
+                all_labels.extend(labels.cpu().numpy())
 
+            # Evaluate metrics
             avg_loss = val_loss / len(loader)
-            accuracy = (correct / total) * 100
-            print(f"{event} Loss {avg_loss:.4f}, Accuracy {accuracy:.2f}%")
+            accuracy = accuracy_score(all_labels, all_preds) * 100
+            precision = precision_score(all_labels, all_preds, average="weighted")
+            recall = recall_score(all_labels, all_preds, average="weighted")
+            f1 = f1_score(all_labels, all_preds, average="weighted")
+            cm = confusion_matrix(all_labels, all_preds)      
+            plot_confusion_matrix(cm, class_names=["Benign", "Malignant"])
+            print(f"\n--- {event} Results ---")
+            print(f"Loss: {avg_loss:.4f}")
+            print(f"Accuracy: {accuracy:.2f}%")
+            print(f"Precision: {precision:.4f}")
+            print(f"Recall: {recall:.4f}")
+            print(f"F1 Score: {f1:.4f}")
+            print(f"Confusion Matrix:\n{cm}")
+
             return avg_loss
 
     def execute(self):
