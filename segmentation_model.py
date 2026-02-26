@@ -123,7 +123,7 @@ class Pipeline:
         return avg_dice
 
     def execute(self):
-        print("--- Starting Training ---")
+        print("--- Starting Training - Segmentation model ---")
         self.model_training()
         print("\n--- Running Validation ---")
         self.validation_and_testing("Validation", self.val_loader)
