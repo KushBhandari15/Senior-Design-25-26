@@ -5,8 +5,7 @@ import torch.nn.functional as F
 import os
 import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-import matplotlib.pyplot as plt
-import seaborn as sns
+from helper import plot_confusion_matrix
 
 class NoduleDataset(Dataset):
     def __init__(self, pos_dir, neg_dir):
@@ -53,14 +52,6 @@ class NoduleDetection(nn.Module):
         x = self.fc2(x)
         return x
 
-def plot_confusion_matrix(cm, class_names):
-    
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
-    plt.ylabel('Actual')
-    plt.xlabel('Predicted')
-    plt.title('Lung Cancer Detection: Confusion Matrix')
-    plt.show()
 
 class Pipeline:
 

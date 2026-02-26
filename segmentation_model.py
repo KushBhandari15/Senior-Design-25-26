@@ -3,7 +3,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset, random_split
 import os
 import numpy as np
-from dice_coefficient import dice_coefficient, DiceBCELoss
+from helper import dice_coefficient, DiceBCELoss
 
 class NoduleDataset(Dataset):
     def __init__(self, pos_dir, mask_dir):
